@@ -15,17 +15,21 @@ docker-compose up
 ```
 
 Endpoints
-```sh
 Videos in desc order of published time
+```sh
 http://127.0.0.1:8000/videos/
+```
 
 Individual video by video_id
+```sh
 http://127.0.0.1:8000/videos/lBx4pbdSY_s/
-
-Search videos
-http://127.0.0.1:8000/search/?q=episode
-Replace episode with search string
 ```
+
+Search videos; Replace episode with search string
+```sh
+http://127.0.0.1:8000/search/?q=episode
+```
+
 
 
 Files of signifance
