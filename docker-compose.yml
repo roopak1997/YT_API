@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    volumes:
+      - ./.docker/rabbitmq/etc/:/etc/rabbitmq/
+      - ./.docker/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./.docker/rabbitmq/logs/:/var/log/rabbitmq/
+    environment:
+      RABBITMQ_DEFAULT_USER: 'user'
+      RABBITMQ_DEFAULT_PASS: 'guest'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+    restart: on-failure
+
+
+  django:
+    depends_on:
+      - rabbitmq
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./:/app
+    ports:
+      - "8000:8000"
+
+  celery_worker:
+    command: celery -A YT_API worker -E
+    build: .
+    restart: on-failure
+    volumes:
+      - ./:/app
+    depends_on:
+      - django
+      - rabbitmq
+
+  celery_beat:
+    command: celery -A YT_API beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    build: .
+    restart: on-failure
+    volumes:
+      - ./:/app
+    depends_on:
+      - django
+      - rabbitmq
+      - celery_worker
+
