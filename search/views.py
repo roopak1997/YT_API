@@ -14,14 +14,14 @@ class VideosListSet(viewsets.ReadOnlyModelViewSet):
 
 
 class VideoDetail(APIView):
-    def get_object(self, pk):
+    def get_object(self, video_id):
         try:
-            return Video.objects.get(pk=pk)
+            return Video.objects.get(video_id=video_id)
         except Video.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        video = self.get_object(pk)
+    def get(self, request, video_id, format=None):
+        video = self.get_object(video_id)
         serializer = VideoSerializer(video)
         return Response(serializer.data)
 

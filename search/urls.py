@@ -16,8 +16,7 @@ search_list = views.VideosSearchSet.as_view({
 
 urlpatterns = [
     path('videos/', videos_list, name='videos-list'),
-    path('videos/<int:pk>/', views.VideoDetail.as_view()),
-    #path('search/', views.VideosSearchSet)
+    path('videos/<str:video_id>/', views.VideoDetail.as_view()),
     path('search/', search_list, name='search-list')
 ]
 
